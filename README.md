@@ -50,3 +50,8 @@ The initial preset list uses neural voice names for Hindi, Bengali, Indian Engli
 ## License
 
 Personal-use project scaffold. Check the upstream voice service's terms and applicable usage rights before publishing or commercial use.
+
+
+## Dual voice conversation
+
+The web interface now includes **Dual conversation — male + female** mode. Put each speaker turn on a separate line; turns alternate automatically, starting with the male voice. To choose a speaker explicitly, prefix a line with `[M]`, `[F]`, `Male:`, or `Female:`. The backend endpoint `POST /api/tts/dialogue` generates each turn with its selected voice and returns one combined MP3. Restart the Python backend after pulling the latest `server.py` changes.
