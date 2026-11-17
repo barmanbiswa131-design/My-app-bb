@@ -20,6 +20,7 @@ button{border:0;border-radius:12px;padding:13px 17px;font:700 14px system-ui;cur
 <button class="voice active" id="male" type="button"><span class="symbol">◉</span><strong>Male narrator</strong><small>Warm, clear and confident</small></button>
 <button class="voice" id="female" type="button"><span class="symbol">◎</span><strong>Female narrator</strong><small>Natural, expressive and clear</small></button>
 </div>
+<div style="margin-top:15px"><label for="mode">Voice mode</label><select id="mode"><option value="single">Single narrator</option><option value="dual">Dual conversation — male + female</option></select><p class="note" id="modeHelp">Single narrator: the selected voice reads the full script.</p></div>
 <div class="grid"><div><label for="language">Language</label><select id="language"><option value="hi">Hindi</option><option value="bn">Bengali</option><option value="en">English (India)</option><option value="ne">Nepali</option></select></div><div><label for="style">Narration pace</label><select id="style"><option value="normal">Natural</option><option value="slow">Cinematic / slow</option><option value="fast">Energetic</option></select></div></div>
 <div class="grid"><div><label for="rate">Speaking speed <span id="rateVal">0%</span></label><input id="rate" type="range" min="-25" max="25" value="0"></div><div><label for="pitch">Voice pitch <span id="pitchVal">0Hz</span></label><input id="pitch" type="range" min="-10" max="10" value="0"></div></div>
 </section>
@@ -35,6 +36,7 @@ const $=id=>document.getElementById(id);let gender='male',audioBlob=null,audioUr
 $('male').onclick=()=>choose('male');$('female').onclick=()=>choose('female');
 function choose(g){gender=g;$('male').classList.toggle('active',g==='male');$('female').classList.toggle('active',g==='female')}
 $('script').addEventListener('input',()=> $('count').textContent=$('script').value.length.toLocaleString()+' / 12,000');
+$('mode').onchange=()=>{$('modeHelp').textContent=$('mode').value==='dual'?'Dual conversation: put each speaker turn on a new line. Turns alternate automatically (Male first). Use [M] or [F] at the start of a line to choose a speaker.':'Single narrator: the selected voice reads the full script.'};
 $('rate').oninput=()=> $('rateVal').textContent=($('rate').value>0?'+':'')+$('rate').value+'%';
 $('pitch').oninput=()=> $('pitchVal').textContent=($('pitch').value>0?'+':'')+$('pitch').value+'Hz';
 $('style').onchange=()=>{if($('style').value==='slow'){$('rate').value=-10}else if($('style').value==='fast'){$('rate').value=12}else{$('rate').value=0}$('rate').dispatchEvent(new Event('input'))};
@@ -47,7 +49,23 @@ $('generate').onclick=async()=>{
  clearAudio();$('generate').disabled=true;$('status').textContent='Generating your narration…';
  const lang=$('language').value,voices={hi:{male:'hi-IN-MadhurNeural',female:'hi-IN-SwaraNeural'},bn:{male:'bn-IN-BashkarNeural',female:'bn-IN-TanishaaNeural'},en:{male:'en-IN-PrabhatNeural',female:'en-IN-NeerjaNeural'},ne:{male:'ne-NP-SagarNeural',female:'ne-NP-HemkalaNeural'}};
  try{
-  const res=await fetch(base+'/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,voice:voices[lang][gender],rate:Number($('rate').value),pitch:Number($('pitch').value)})});
+  const rate=Number($('rate').value),pitch=Number($('pitch').value);
+  let endpoint='/api/tts',body;
+  if($('mode').value==='dual'){
+   let next='male';
+   const lines=text.split(/\\n+/).map(line=>line.trim()).filter(Boolean).map(line=>{
+    let speaker=next;
+    if(/^\\[(M|MALE)\\]/i.test(line)){speaker='male';line=line.replace(/^\\[(M|MALE)\\]\\s*/i,'');}
+    else if(/^\\[(F|FEMALE)\\]/i.test(line)){speaker='female';line=line.replace(/^\\[(F|FEMALE)\\]\\s*/i,'');}
+    else if(/^Male\\s*:/i.test(line)){speaker='male';line=line.replace(/^Male\\s*:/i,'').trim();}
+    else if(/^Female\\s*:/i.test(line)){speaker='female';line=line.replace(/^Female\\s*:/i,'').trim();}
+    next=speaker==='male'?'female':'male';
+    return {text:line,voice:voices[lang][speaker]};
+   }).filter(line=>line.text);
+   if(lines.length<2)throw new Error('Dual mode needs at least two speaker turns. Put each turn on a new line.');
+   endpoint='/api/tts/dialogue';body={lines,rate,pitch};
+  }else{body={text,voice:voices[lang][gender],rate,pitch};}
+  const res=await fetch(base+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!res.ok)throw new Error((await res.text()).slice(0,220)||'Voice server error');
   const job=await res.json();
   if(!job.audio_url)throw new Error('The voice server did not return an audio file.');
