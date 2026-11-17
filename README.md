@@ -17,7 +17,7 @@ This first version uses Microsoft Edge's online neural TTS service through the c
 
 ## 1. Publish the frontend with GitHub Pages
 
-In the repository, open **Settings → Pages**. Choose **Deploy from a branch**, select **main** and **/(root)**, then Save. Your site will appear at:
+In the repository, open **Settings → Pages** and set the source to **GitHub Actions**. The included workflow deploys the root folder whenever you push to `main`. Your site will appear at:
 
 `https://barmanbiswa131-design.github.io/My-app-bb/`
 
