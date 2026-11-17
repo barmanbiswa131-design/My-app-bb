@@ -35,6 +35,15 @@ class TTSRequest(BaseModel):
     rate: int = Field(default=0, ge=-25, le=25)
     pitch: int = Field(default=0, ge=-10, le=10)
 
+class DialogueLine(BaseModel):
+    text: str = Field(min_length=1, max_length=3000)
+    voice: str
+
+class DialogueRequest(BaseModel):
+    lines: list[DialogueLine] = Field(min_length=2, max_length=40)
+    rate: int = Field(default=0, ge=-25, le=25)
+    pitch: int = Field(default=0, ge=-10, le=10)
+
 def remove_file(path: Path):
     try:
         path.unlink(missing_ok=True)
@@ -80,6 +89,44 @@ async def create_voice(payload: TTSRequest):
 
     # The generated file is returned once and deleted immediately after the response is sent.
     return {"audio_url": f"/api/audio/{job_id}", "format": "mp3"}
+
+@app.post("/api/tts/dialogue")
+async def create_dialogue(payload: DialogueRequest):
+    cleanup_old_files()
+    if sum(len(line.text) for line in payload.lines) > 12000:
+        raise HTTPException(status_code=400, detail="Dialogue is limited to 12,000 characters.")
+    for line in payload.lines:
+        if line.voice not in ALLOWED_VOICES:
+            raise HTTPException(status_code=400, detail="A dialogue voice is not in the allowed preset list.")
+
+    job_id = uuid.uuid4().hex
+    output = TEMP_DIR / f"{job_id}.mp3"
+    parts = []
+    try:
+        for index, line in enumerate(payload.lines):
+            part = TEMP_DIR / f"{job_id}-{index}.mp3"
+            communicate = edge_tts.Communicate(
+                line.text.strip(), line.voice,
+                rate=f"{payload.rate:+d}%", pitch=f"{payload.pitch:+d}Hz"
+            )
+            await communicate.save(str(part))
+            if not part.exists() or part.stat().st_size == 0:
+                raise RuntimeError("A dialogue line returned empty audio.")
+            parts.append(part)
+        with output.open("wb") as combined:
+            for part in parts:
+                combined.write(part.read_bytes())
+        if output.stat().st_size == 0:
+            raise RuntimeError("The combined dialogue audio is empty.")
+    except Exception as exc:
+        remove_file(output)
+        raise HTTPException(status_code=502, detail=f"Dialogue generation failed: {str(exc)[:180]}")
+    finally:
+        for part in parts:
+            remove_file(part)
+
+    return {"audio_url": f"/api/audio/{job_id}", "format": "mp3"}
+
 
 @app.get("/api/audio/{job_id}")
 async def get_audio(job_id: str):
