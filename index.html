@@ -53,12 +53,12 @@ $('generate').onclick=async()=>{
   let endpoint='/api/tts',body;
   if($('mode').value==='dual'){
    let next='male';
-   const lines=text.split(/\\n+/).map(line=>line.trim()).filter(Boolean).map(line=>{
+   const lines=text.split(/\n+/).map(line=>line.trim()).filter(Boolean).map(line=>{
     let speaker=next;
-    if(/^\\[(M|MALE)\\]/i.test(line)){speaker='male';line=line.replace(/^\\[(M|MALE)\\]\\s*/i,'');}
-    else if(/^\\[(F|FEMALE)\\]/i.test(line)){speaker='female';line=line.replace(/^\\[(F|FEMALE)\\]\\s*/i,'');}
-    else if(/^Male\\s*:/i.test(line)){speaker='male';line=line.replace(/^Male\\s*:/i,'').trim();}
-    else if(/^Female\\s*:/i.test(line)){speaker='female';line=line.replace(/^Female\\s*:/i,'').trim();}
+    if(/^\[(M|MALE)\]/i.test(line)){speaker='male';line=line.replace(/^\[(M|MALE)\]\s*/i,'');}
+    else if(/^\[(F|FEMALE)\]/i.test(line)){speaker='female';line=line.replace(/^\[(F|FEMALE)\]\s*/i,'');}
+    else if(/^Male\s*:/i.test(line)){speaker='male';line=line.replace(/^Male\s*:/i,'').trim();}
+    else if(/^Female\s*:/i.test(line)){speaker='female';line=line.replace(/^Female\s*:/i,'').trim();}
     next=speaker==='male'?'female':'male';
     return {text:line,voice:voices[lang][speaker]};
    }).filter(line=>line.text);
