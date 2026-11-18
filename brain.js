@@ -30,6 +30,9 @@
   const replies = {
     bn: {
       greet:["হ্যাঁ, বলো। শুনছি।","কী খবর? আজ কেমন আছ?"],
+      well:["ভালো আছ শুনে ভালো লাগল! আজ কী করছ?","বেশ! আজকের দিনটা কেমন যাচ্ছে?"],
+      food:["আমি AI, তাই খাই না। তবে তুমি কী খেয়েছ?","আমি খাবার খাই না, কিন্তু খাবার নিয়ে গল্প করতে পারি! তুমি কী খেয়েছ?"],
+      relationship:["আমি তোমার AI সহকারী ও বন্ধুর মতো কথা বলতে পারি, কিন্তু প্রেমিকা হতে পারি না। কী নিয়ে কথা বলতে চাও?","আমি বন্ধুসুলভভাবে পাশে থেকে কথা বলতে পারি—তবে আমি AI, girlfriend নই।"],
       task:["অবশ্যই চেষ্টা করব। কী কাজ করতে হবে, বলো।","হ্যাঁ, বলো কী কাজ? আগে পুরোটা বুঝে নিই, তারপর সাহায্য করি।"],
       how:["আমি ভালো আছি। তুমি কেমন আছ?","আমি আছি, তোমার কথা শুনছি। তোমার কী খবর?"],
       sad:["কী হয়েছে? চাইলে ধীরে ধীরে আমাকে বলতে পারো।","মন খারাপ কেন? কোনো চাপ নেই, যতটুকু বলতে ইচ্ছে করে বলো।"],
@@ -55,6 +58,9 @@
     },
     "bn-rom": {
       greet:["Haan, bolo. Shunchhi.","Ki khobor? Aj kemon achho?"],
+      well:["Bhalo achho shune bhalo laglo! Aj ki korchho?","Bes! Ajker din kemon jacche?"],
+      food:["Ami AI, tai khai na. Tobe tumi ki kheyechho?","Ami khabar khai na, kintu khabar niye golpo korte pari! Tumi ki kheyechho?"],
+      relationship:["Ami tomar AI assistant, bondhur moto kotha bolte pari; kintu girlfriend hote pari na. Ki niye kotha bolte chao?","Ami bondhusulobh bhabe tomar kotha shunte pari, kintu ami AI—girlfriend noi."],
       task:["Oboshshoi cheshta korbo. Ki kaj korte hobe, bolo.","Haan, bolo ki kaj? Age purota bujhe ni, tarpor shahajjo kori."],
       how:["Ami bhalo achhi. Tumi kemon achho?","Ami achhi, tomar kotha shunchhi. Tomar ki khobor?"],
       sad:["Ki hoyeche? Chaile dhire dhire amake bolte paro.","Mon kharap keno? Kono chap nei, jotota bolte ichchhe kore bolo."],
@@ -80,6 +86,9 @@
     },
     hi: {
       greet:["हाँ, बताओ। मैं सुन रही हूँ।","क्या हाल है? आज कैसे हो?"],
+      well:["अच्छा लगा सुनकर कि तुम ठीक हो! आज क्या कर रहे हो?","बहुत अच्छा! तुम्हारा दिन कैसा जा रहा है?"],
+      food:["मैं AI हूँ, इसलिए खाना नहीं खाती। तुमने क्या खाया?","मैं खाना नहीं खाती, लेकिन खाने के बारे में बात कर सकती हूँ। तुमने क्या खाया?"],
+      relationship:["मैं तुम्हारी AI सहायक और दोस्त की तरह बात कर सकती हूँ, लेकिन गर्लफ्रेंड नहीं बन सकती। क्या बात करना चाहोगे?","मैं दोस्ताना तरीके से बात कर सकती हूँ, लेकिन मैं AI हूँ—गर्लफ्रेंड नहीं।"],
       task:["ज़रूर कोशिश करूँगी। क्या काम करना है, बताओ।","हाँ, बताओ क्या काम है? पहले पूरी बात समझ लूँ, फिर मदद करूँगी।"],
       how:["मैं ठीक हूँ। तुम कैसे हो?","मैं यहीं हूँ, तुम्हारी बात सुन रही हूँ। तुम्हारा क्या हाल है?"],
       sad:["क्या हुआ? चाहो तो आराम से बता सकते हो।","मन उदास क्यों है? जितना बताना चाहो, बताओ।"],
@@ -105,6 +114,9 @@
     },
     "hi-rom": {
       greet:["Haan, batao. Main sun rahi hoon.","Kya haal hai? Aaj kaise ho?"],
+      well:["Achha laga sunkar ki tum theek ho! Aaj kya kar rahe ho?","Bahut badhiya! Tumhara din kaisa ja raha hai?"],
+      food:["Main AI hoon, isliye khana nahi khati. Tumne kya khaya?","Main khana nahi khati, lekin khane ke baare mein baat kar sakti hoon. Tumne kya khaya?"],
+      relationship:["Main tumhari AI assistant aur dost ki tarah baat kar sakti hoon, lekin girlfriend nahi ban sakti. Kya baat karna chahoge?","Main friendly tareeke se baat kar sakti hoon, lekin main AI hoon—girlfriend nahi."],
       task:["Zaroor koshish karungi. Kya kaam karna hai, batao.","Haan, batao kya kaam hai? Pehle poori baat samajh loon, phir madad karungi."],
       how:["Main theek hoon. Tum kaise ho?","Main yahin hoon, tumhari baat sun rahi hoon. Tumhara kya haal hai?"],
       sad:["Kya hua? Chaho to aaram se bata sakte ho.","Mann udaas kyun hai? Jitna batana chaho, batao."],
@@ -131,6 +143,9 @@
   };
 
   const patterns = {
+    relationship:["আমার gf হবে","আমার গার্লফ্রেন্ড হবে","তুমি কি আমার gf","তুমি আমার প্রেমিকা হবে","প্রেমিকা হবে","girlfriend banogi","meri girlfriend","meri gf","will you be my girlfriend","be my gf","girlfriend ban jao","मेरी गर्लफ्रेंड","क्या तुम मेरी गर्लफ्रेंड","मेरी प्रेमिका"],
+    food:["ভাত খেয়েছ","ভাত খেয়েছ","খেয়েছ","খেয়েছ","খাবার খেয়েছ","খাবার খেয়েছ","খাওয়া হয়েছে","খাওয়া hoyeche","bhat kheyecho","bhat kheye chho","bhat kheyechho","kheyecho","kheyechho","khabar kheyecho","tumi kheyecho","kuch khaya","khana khaya","khana kha liya","khana khaya kya","खाना खाया","खाना खा लिया","खाना खाया क्या"],
+    well:["ভালো","ভাল","ভালো আছি","ভাল আছি","আমি ভালো","আমি ভাল","bhalo","valo","bhalo achi","valo achi","ami bhalo","ami valo","thik achi","theek hoon","main theek","badhiya","accha hoon","ठीक हूँ","अच्छा हूँ","बढ़िया"],
     greet:["হ্যালো","হ্যালো","নমস্কার","আসসালামু","সুপ্রভাত","শুভ সকাল","হাই","hello","hi","hey","হ্যালো","নমস্তে","नमस्ते","नमस्कार","सुप्रभात","हाय","हेलो","ami esechi","ami achi","ki khobor","kemon acho","kmn acho","kemon achho","ki obostha","haan bolo","suno"],
     how:["কেমন আছ","কেমন আছো","কী খবর","কি খবর","তুমি কেমন","কেমন চল","कैसे हो","कैसी हो","क्या हाल","तुम कैसे","kaise ho","kaisi ho","kya haal","tum kaise ho","aap kaise ho","tumi kemon acho","tumi kmn acho","tui kemon achis"],
     sad:["মন খারাপ","ভালো লাগছে না","ভাল লাগছে না","ভালো নেই","ভাল নেই","কষ্ট হচ্ছে","খারাপ লাগছে","মনটা খারাপ","দুঃখ লাগছে","কাঁদতে","একদম ভালো নেই","उदास","मन खराब","अच्छा नहीं लग","दुखी","परेशान हूँ","रोने","mann udaas","man udaas","dil udaas","accha nahi lag","achha nahi lag","bahut bura lag","dukhi hoon","pareshan hoon","mon kharap","mon ta kharap","valo nei","bhalo nei","bhalo lagchhe na","valo lagche na","kharap lagche","kharap lagchhe","amar mon kharap"],
@@ -143,20 +158,20 @@
     bye:["বিদায়","আবার কথা হবে","যাই","শুভরাত্রি","পরে কথা","अलविदा","फिर मिलेंगे","शुभ रात्रि","चलता हूँ","चलती हूँ","bye","good night","phir milenge","ja raha","ja rahi","biday","pore kotha hobe","jacchi"],
     identity:["তুমি কে","তোমার নাম","তোমার পরিচয়","তুমি কি NOVA","আপনি কে","तुम कौन","तुम्हारा नाम","आप कौन","तुम्हारा परिचय","who are you","your name","tumi ke","tor nam ki","tomar nam ki","tumar nam ki","tomar naam ki","apni ke"],
     creator:["কে বানিয়েছে","কে তৈরি করেছে","তোমাকে কে বানিয়েছে","তোমার নির্মাতা","तुम्हें किसने बनाया","किसने बनाया","तुम्हारा निर्माता","who made you","who created you","ke baniyeche","ke toiri koreche","ke banalo","tomake ke baniyeche"],
-    capability:["কি করতে পার","কী করতে পার","তুমি কী জানো","কোন ভাষা","কী কী পার","क्या कर सकती","क्या कर सकते","कौन सी भाषा","क्या जानते","what can you do","which language","ki korte paro","ki ki paro","ki jano","kon bhasha"],
+    capability:["আমার জন্য কি কি করতে পার","আমার জন্য কী কী করতে পার","আমার জন্য কী করতে পার","কি কি করতে পারো","কী কী করতে পারো","তুমি কী কী করতে পার","আমার জন্য কি কি করবে","কি করতে পার","কী করতে পার","তুমি কী জানো","কোন ভাষা","কী কী পার","क्या कर सकती","क्या कर सकते","कौन सी भाषा","क्या जानते","what can you do","which language","ki korte paro","ki ki paro","ki jano","kon bhasha"],
     repeat:["আবার বল","বুঝিনি","বুঝতে পারিনি","মানে কী","পুনরায় বল","फिर से बताओ","समझ नहीं आया","मतलब क्या","dobara batao","samajh nahi aaya","abar bolo","bujhini","bujhte parini","mane ki"],
     yes:["হ্যাঁ","ঠিক আছে","আচ্ছা","হুম","জি","हाँ","हां","ठीक है","अच्छा","haan","han","theek hai","thik ache","achha","hmm"],
     no:["না","একদম না","চাই না","নাহ","नहीं","ना","बिल्कुल नहीं","nahi","nahin","bilkul nahi","chai na","lagbe na"],
     name:["আমার নাম কী","আমার নাম","তোমার নাম কী","मेरा नाम","मुझे क्या बुलाओ","mera naam","mujhe kya bulao","amar nam"],
     doing:["কি করছ","কী করছ","কি করছো","কী করছো","তুমি কী কর","তুমি কি কর","क्या कर रहे","क्या कर रही","तुम क्या कर","what are you doing","ki korcho","ki korchho","tumi ki korcho","tumi ki korchho","ki korchis"],
-    task:["আমার একটা কাজ","একটা কাজ করতে পারবে","একটা কাজ ছিল","একটা কাজ আছে","তুমি কি কাজটা","তুমি কি এটা করতে পারবে","পারবে কি","করতে পারবে","করে দিতে পারবে","কাজটা করে দেবে","একটা হেল্প করবে","একটু সাহায্য করবে","amar ekta kaj","amar ekta kaaj","ekta kaj korte parbe","ekta kaaj korte parbe","ekta kaj chhilo","ekta kaj chilo","ekta kaj ache","tumi ki eta korte parbe","parbe ki","kore dite parbe","kajta kore debe","ekta help korbe","zara ek kaam","ek kaam kar sakti","ek kaam kar sakte","mera ek kaam","ek kaam tha","kya tum ye kar sakti","kya tum ye kar sakte","kar paoge","कर पाओगे","एक काम करोगी","एक काम करोगे","मेरा एक काम","एक काम था","क्या तुम ये कर सकते","क्या तुम ये कर सकती"],
+    task:["একটা কাজ করবে","একটা কাজ করো","একটু কাজ করবে","কাজ করে দেবে","একটা কাজ করতে হবে","আমার একটা কাজ","একটা কাজ করতে পারবে","একটা কাজ ছিল","একটা কাজ আছে","তুমি কি কাজটা","তুমি কি এটা করতে পারবে","পারবে কি","করতে পারবে","করে দিতে পারবে","কাজটা করে দেবে","একটা হেল্প করবে","একটু সাহায্য করবে","amar ekta kaj","amar ekta kaaj","ekta kaj korte parbe","ekta kaaj korte parbe","ekta kaj chhilo","ekta kaj chilo","ekta kaj ache","tumi ki eta korte parbe","parbe ki","kore dite parbe","kajta kore debe","ekta help korbe","zara ek kaam","ek kaam kar sakti","ek kaam kar sakte","mera ek kaam","ek kaam tha","kya tum ye kar sakti","kya tum ye kar sakte","kar paoge","कर पाओगे","एक काम करोगी","एक काम करोगे","मेरा एक काम","एक काम था","क्या तुम ये कर सकते","क्या तुम ये कर सकती"],
     help:["সাহায্য কর","সাহায্য চাই","হেল্প","मदद करो","मदद चाहिए","सहायता","help me","madad karo","madad chahiye","shahajjo koro","shahajjo chai"],
     where:["তুমি কোথায়","কোথায় থাক","কোথায় আছ","कहाँ हो","कहाँ रहते","कहां हो","where are you","kahan ho","kahan rehte","tumi kothay","kothay acho","kothay thako"],
     explain:["বুঝিয়ে বল","বুঝিয়ে দাও","সহজ করে বল","समझाओ","समझा दो","आसान भाषा","explain","samjhao","samjha do","bujhiye bolo","bujhiye dao","shohoj kore bolo"]
   };
 
   function classify(s) {
-    const order=["identity","creator","capability","task","how","greet","sad","lonely","tired","angry","happy","thanks","sorry","bye","repeat","doing","help","where","explain","name","yes","no"];
+    const order=["identity","creator","relationship","capability","task","food","how","well","greet","sad","lonely","tired","angry","happy","thanks","sorry","bye","repeat","doing","help","where","explain","name","yes","no"];
     for (const k of order) if (hasAny(s,patterns[k])) return k;
     return "default";
   }
@@ -174,6 +189,7 @@
     const previousQuestionWasHow = hasAny(previousReply,["tumi kemon","tomar ki khobor","ki khobor aj","kemon achho","kemon acho","ami bhalo achhi tumi","তুমি কেমন","তোমার কী খবর","কী খবর","কেমন আছ","मैं ठीक हूँ तुम","तुम कैसे हो","tum kaise ho"]);
     const reciprocalWell = hasAny(s,["valo tumi","bhalo tumi","valo achi tumi","bhalo achi tumi","ami valo tumi","ami bhalo tumi","ভালো তুমি","ভালো আছি তুমি","আমি ভালো তুমি","अच्छा तुम","ठीक तुम","अच्छा हूँ तुम","theek tum","achha tum"]);
     let kind = previousQuestionWasHow && reciprocalWell ? "how" : classify(s);
+    if(kind==="default" && hasAny(s,patterns.well)) kind="well";
     const bank=replies[lang]||replies.bn;
     if(kind==="name" && !hasAny(s,["তোমার নাম","तुम्हारा नाम","tomar nam","tomar naam"])) {
       const previous=history.filter(x=>x.role==="user").slice(-2).map(x=>clean(x.content)).join(" ");
