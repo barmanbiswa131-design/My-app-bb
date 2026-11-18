@@ -171,7 +171,7 @@
     const recentAssistant = history.filter(x=>x.role==="assistant").slice(-1)[0];
     const recentUser = history.filter(x=>x.role==="user").slice(-1)[0];
     const previousReply = recentAssistant ? clean(recentAssistant.content) : "";
-    const previousQuestionWasHow = hasAny(previousReply,["tumi kemon","tomar ki khobor","ami bhalo achhi tumi","তুমি কেমন","তোমার কী খবর","मैं ठीक हूँ तुम","तुम कैसे हो","tum kaise ho"]);
+    const previousQuestionWasHow = hasAny(previousReply,["tumi kemon","tomar ki khobor","ki khobor aj","kemon achho","kemon acho","ami bhalo achhi tumi","তুমি কেমন","তোমার কী খবর","কী খবর","কেমন আছ","मैं ठीक हूँ तुम","तुम कैसे हो","tum kaise ho"]);
     const reciprocalWell = hasAny(s,["valo tumi","bhalo tumi","valo achi tumi","bhalo achi tumi","ami valo tumi","ami bhalo tumi","ভালো তুমি","ভালো আছি তুমি","আমি ভালো তুমি","अच्छा तुम","ठीक तुम","अच्छा हूँ तुम","theek tum","achha tum"]);
     let kind = previousQuestionWasHow && reciprocalWell ? "how" : classify(s);
     const bank=replies[lang]||replies.bn;
