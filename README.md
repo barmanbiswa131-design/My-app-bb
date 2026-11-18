@@ -1,57 +1,26 @@
-# NOVA Voice Studio
+# NOVA 2.0
 
-A personal, minimal text-to-speech workspace for video narration. The repository contains a static GitHub Pages frontend and a small Python API.
+A small, friendly AI companion — built as a web app first, then planned for Android APK.
 
-## Features
+## Current prototype
+- Mobile-first chat interface (English UI)
+- Tiny local rule-based brain for short, supportive replies
+- Session-only conversation context; no account, database, or saved chat history
+- Offline shell via service worker
+- Hybrid API adapter: set `API_BASE_URL` in `config.js` when a backend is ready
+- No external AI API key and no human voice recordings in this prototype
 
-- Two preset narrator choices (male and female)
-- Hindi, Bengali, Indian English and Nepali voice selections
-- Natural / cinematic-slow / energetic pace controls
-- MP3 preview and download
-- No user accounts, database, voice history or automatic audio library
-- Backend creates a temporary MP3 and deletes it after the audio response is sent; abandoned files are cleaned after 15 minutes
+## Run
+Open the GitHub Pages site after enabling Pages for this branch, or serve this folder with any static web server.
 
-## Important about the voice engine
+## Next development stages
+1. Improve the local intent/context engine and add tests for Bangla, Banglish, Hindi and English.
+2. Build a small online brain endpoint with a privacy-conscious, low-resource model.
+3. Build a fully synthetic speech engine. The current prototype intentionally does not use recorded human voices or device TTS voices.
+4. Add speech input and offline model options after testing mobile memory and performance.
+5. Package the tested web app as an Android APK.
 
-This first version uses Microsoft Edge's online neural TTS service through the community `edge-tts` Python package. It is not a newly trained NOVA model, and it requires an internet connection. Voice availability and quality depend on the upstream service. The app does not guarantee ElevenLabs-level expressive acting. It is a free-start prototype, not an unlimited hosted service.
+## Hybrid design
+The app always has a local fallback. If an API URL is configured and reachable, it tries the online brain first; when the connection fails, it replies using the local brain.
 
-## 1. Publish the frontend with GitHub Pages
-
-In the repository, open **Settings → Pages** and set the source to **GitHub Actions**. The included workflow deploys the root folder whenever you push to `main`. Your site will appear at:
-
-`https://barmanbiswa131-design.github.io/My-app-bb/`
-
-## 2. Run the voice API
-
-The GitHub Pages site cannot run Python itself. Start the backend on a computer or a temporary notebook session:
-
-```bash
-python -m pip install -r requirements.txt
-uvicorn server:app --host 0.0.0.0 --port 8000
-```
-
-For use from your phone, expose port 8000 using a temporary HTTPS tunnel you control, then paste that HTTPS address into the **Backend URL** field in the website. Do not publish private tunnel tokens or API credentials in this repository.
-
-Check the backend at `/api/health`.
-
-## 3. Privacy and temporary files
-
-- No database or account system is included.
-- The frontend does not save scripts or audio to local storage.
-- The backend writes generated MP3 files only under the system temporary directory.
-- When the browser fetches the audio, the backend deletes that temporary file after sending it.
-- Unclaimed files are cleaned after 15 minutes, and the temporary directory is not a permanent archive.
-- The audio remains temporarily in the open browser tab for preview/download. Use **Clear audio** or close the tab to release it.
-
-## Voice presets
-
-The initial preset list uses neural voice names for Hindi, Bengali, Indian English and Nepali. If a voice is unavailable in the upstream service, generation will return an error; the preset list can then be adjusted.
-
-## License
-
-Personal-use project scaffold. Check the upstream voice service's terms and applicable usage rights before publishing or commercial use.
-
-
-## Dual voice conversation
-
-The web interface now includes **Dual conversation — male + female** mode. Put each speaker turn on a separate line; turns alternate automatically, starting with the male voice. To choose a speaker explicitly, prefix a line with `[M]`, `[F]`, `Male:`, or `Female:`. The backend endpoint `POST /api/tts/dialogue` generates each turn with its selected voice and returns one combined MP3. Restart the Python backend after pulling the latest `server.py` changes.
+This is an early prototype, not yet a full language model or a natural spoken voice.
