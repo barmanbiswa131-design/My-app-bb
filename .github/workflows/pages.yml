@@ -1,7 +1,7 @@
-name: Deploy NOVA Voice Studio
+name: Deploy NOVA 2.0
 on:
   push:
-    branches: [main]
+    branches: [nova2-prototype]
   workflow_dispatch:
 permissions:
   contents: read
