@@ -1,79 +1,44 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090d18"><title>NOVA Voice Studio</title>
-<style>
-:root{color-scheme:dark;--bg:#090d18;--panel:#111a2b;--line:#263550;--muted:#9aa9c2;--text:#f4f7ff;--accent:#8b7cff;--cyan:#52d6e8}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#20264d 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,Arial,sans-serif;min-height:100vh}
-main{max-width:900px;margin:auto;padding:28px 18px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--cyan));display:grid;place-items:center;color:#07101d;font-weight:900;font-size:20px}.brand h1{font-size:18px;margin:0;letter-spacing:.12em}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}.pill{border:1px solid #315a58;color:#8de4c6;background:#102b2b;padding:6px 10px;border-radius:30px;font-size:11px}
-.hero{margin:24px 0 22px}.eyebrow{color:#a99fff;text-transform:uppercase;letter-spacing:.18em;font-size:11px;font-weight:700}.hero h2{font-size:clamp(30px,6vw,48px);line-height:1.08;margin:10px 0}.hero p{color:var(--muted);max-width:620px;margin:0}
-.card{background:linear-gradient(145deg,rgba(21,32,52,.96),rgba(14,21,36,.98));border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:16px;box-shadow:0 16px 50px #0003}.section-title{font-size:14px;font-weight:750;margin:0 0 13px}.voices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.voice{border:1px solid var(--line);border-radius:15px;padding:15px;background:#0d1525;cursor:pointer;text-align:left;color:var(--text);transition:.2s}.voice.active{border-color:var(--accent);background:linear-gradient(135deg,#28234e,#14283b);box-shadow:0 0 0 1px #8b7cff55}.voice .symbol{font-size:24px}.voice strong{display:block;margin:6px 0 2px}.voice small{color:var(--muted)}
-label{display:block;font-size:12px;color:#c3cce0;margin:15px 0 7px}select,input,textarea{width:100%;background:#0a1220;border:1px solid var(--line);border-radius:11px;color:var(--text);padding:12px;font:inherit;outline:none}textarea{min-height:190px;resize:vertical;line-height:1.65}select:focus,input:focus,textarea:focus{border-color:var(--accent)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.range-row{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12px}input[type=range]{padding:0;accent-color:var(--accent)}
-button{border:0;border-radius:12px;padding:13px 17px;font:700 14px system-ui;cursor:pointer}.primary{width:100%;margin-top:16px;color:#08111d;background:linear-gradient(100deg,#a99aff,#5bd8e7);font-weight:800}.secondary{background:#202c43;color:var(--text);border:1px solid var(--line)}button:disabled{opacity:.5;cursor:wait}.status{color:var(--muted);font-size:12px;min-height:20px;margin-top:10px}.result{display:none}.result audio{width:100%;margin:10px 0}.actions{display:flex;gap:10px;flex-wrap:wrap}.actions button{flex:1}.note{color:var(--muted);font-size:12px;margin-top:16px}.privacy{display:flex;gap:9px;align-items:flex-start;color:#a7bad0;font-size:12px;margin-top:14px}.privacy span{color:#7ee2b7;font-size:17px}
-@media(max-width:560px){main{padding:18px 13px 40px}.card{padding:15px}.grid{grid-template-columns:1fr}.top{align-items:flex-start}.pill{font-size:10px}.voices{gap:8px}}
-</style></head>
-<body><main>
-<header class="top"><div class="brand"><div class="logo">N</div><div><h1>NOVA VOICE STUDIO</h1><p>Personal narration workspace</p></div></div><span class="pill">PRIVATE • NO HISTORY</span></header>
-<section class="hero"><div class="eyebrow">Your personal AI narrator</div><h2>Give your words<br> a human voice.</h2><p>Create narration for documentaries, Shorts and cinematic videos with two simple voice profiles.</p></section>
-<section class="card"><h3 class="section-title">01 / Choose your voice</h3><div class="voices">
-<button class="voice active" id="male" type="button"><span class="symbol">◉</span><strong>Male narrator</strong><small>Warm, clear and confident</small></button>
-<button class="voice" id="female" type="button"><span class="symbol">◎</span><strong>Female narrator</strong><small>Natural, expressive and clear</small></button>
-</div>
-<div style="margin-top:15px"><label for="mode">Voice mode</label><select id="mode"><option value="single">Single narrator</option><option value="dual">Dual conversation — male + female</option></select><p class="note" id="modeHelp">Single narrator: the selected voice reads the full script.</p></div>
-<div class="grid"><div><label for="language">Language</label><select id="language"><option value="hi">Hindi</option><option value="bn">Bengali</option><option value="en">English (India)</option><option value="ne">Nepali</option></select></div><div><label for="style">Narration pace</label><select id="style"><option value="normal">Natural</option><option value="slow">Cinematic / slow</option><option value="fast">Energetic</option></select></div></div>
-<div class="grid"><div><label for="rate">Speaking speed <span id="rateVal">0%</span></label><input id="rate" type="range" min="-25" max="25" value="0"></div><div><label for="pitch">Voice pitch <span id="pitchVal">0Hz</span></label><input id="pitch" type="range" min="-10" max="10" value="0"></div></div>
-</section>
-<section class="card"><h3 class="section-title">02 / Your script</h3><label for="script">Paste your narration text</label><textarea id="script" maxlength="12000" placeholder="Paste your YouTube Shorts or documentary script here..."></textarea><div class="range-row"><span>Up to 12,000 characters</span><span id="count">0 / 12,000</span></div>
-<button class="primary" id="generate">✦ Generate voice</button><div class="status" id="status" role="status"></div>
-<div class="result" id="result"><label>03 / Your generated voice</label><audio id="player" controls></audio><div class="actions"><button class="secondary" id="download">↓ Download MP3</button><button class="secondary" id="clear">Clear audio</button></div><p class="note">Audio is kept only in this page's temporary memory. The server removes its temporary file after sending it.</p></div>
-</section>
-<section class="card"><h3 class="section-title">Connect your free voice engine</h3><label for="api">Backend URL</label><input id="api" type="url" placeholder="Paste your temporary server URL (e.g. https://....trycloudflare.com)"><p class="note">The GitHub Pages site is the interface. Voice generation needs the free Python backend running separately (for example, in your own Colab session). No account, database or permanent audio library is used.</p><div class="privacy"><span>●</span><div><b>Privacy by design</b><br>No voice history, no database, no automatic cloud library. Clear the player to release the browser's temporary audio.</div></div></section>
-<footer class="note" style="text-align:center;margin-top:22px">NOVA VOICE STUDIO · Personal use</footer>
-</main>
-<script>
-const $=id=>document.getElementById(id);let gender='male',audioBlob=null,audioUrl=null;
-$('male').onclick=()=>choose('male');$('female').onclick=()=>choose('female');
-function choose(g){gender=g;$('male').classList.toggle('active',g==='male');$('female').classList.toggle('active',g==='female')}
-$('script').addEventListener('input',()=> $('count').textContent=$('script').value.length.toLocaleString()+' / 12,000');
-$('mode').onchange=()=>{$('modeHelp').textContent=$('mode').value==='dual'?'Dual conversation: put each speaker turn on a new line. Turns alternate automatically (Male first). Use [M] or [F] at the start of a line to choose a speaker.':'Single narrator: the selected voice reads the full script.'};
-$('rate').oninput=()=> $('rateVal').textContent=($('rate').value>0?'+':'')+$('rate').value+'%';
-$('pitch').oninput=()=> $('pitchVal').textContent=($('pitch').value>0?'+':'')+$('pitch').value+'Hz';
-$('style').onchange=()=>{if($('style').value==='slow'){$('rate').value=-10}else if($('style').value==='fast'){$('rate').value=12}else{$('rate').value=0}$('rate').dispatchEvent(new Event('input'))};
-function clearAudio(){if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl=null;audioBlob=null;$('player').removeAttribute('src');$('player').load();$('result').style.display='none'}
-$('clear').onclick=clearAudio;
-$('generate').onclick=async()=>{
- const text=$('script').value.trim(),base=$('api').value.trim().replace(/\/$/,'');
- if(!text){$('status').textContent='Please paste your script first.';return}
- if(!base){$('status').textContent='Add your running backend URL below before generating.';$('api').focus();return}
- clearAudio();$('generate').disabled=true;$('status').textContent='Generating your narration…';
- const lang=$('language').value,voices={hi:{male:'hi-IN-MadhurNeural',female:'hi-IN-SwaraNeural'},bn:{male:'bn-IN-BashkarNeural',female:'bn-IN-TanishaaNeural'},en:{male:'en-IN-PrabhatNeural',female:'en-IN-NeerjaNeural'},ne:{male:'ne-NP-SagarNeural',female:'ne-NP-HemkalaNeural'}};
- try{
-  const rate=Number($('rate').value),pitch=Number($('pitch').value);
-  let endpoint='/api/tts',body;
-  if($('mode').value==='dual'){
-   let next='male';
-   const lines=text.split(/\n+/).map(line=>line.trim()).filter(Boolean).map(line=>{
-    let speaker=next;
-    if(/^\[(M|MALE)\]/i.test(line)){speaker='male';line=line.replace(/^\[(M|MALE)\]\s*/i,'');}
-    else if(/^\[(F|FEMALE)\]/i.test(line)){speaker='female';line=line.replace(/^\[(F|FEMALE)\]\s*/i,'');}
-    else if(/^Male\s*:/i.test(line)){speaker='male';line=line.replace(/^Male\s*:/i,'').trim();}
-    else if(/^Female\s*:/i.test(line)){speaker='female';line=line.replace(/^Female\s*:/i,'').trim();}
-    next=speaker==='male'?'female':'male';
-    return {text:line,voice:voices[lang][speaker]};
-   }).filter(line=>line.text);
-   if(lines.length<2)throw new Error('Dual mode needs at least two speaker turns. Put each turn on a new line.');
-   endpoint='/api/tts/dialogue';body={lines,rate,pitch};
-  }else{body={text,voice:voices[lang][gender],rate,pitch};}
-  const res=await fetch(base+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(!res.ok)throw new Error((await res.text()).slice(0,220)||'Voice server error');
-  const job=await res.json();
-  if(!job.audio_url)throw new Error('The voice server did not return an audio file.');
-  const audioRes=await fetch(base+job.audio_url);
-  if(!audioRes.ok)throw new Error('The temporary audio could not be retrieved.');
-  audioBlob=await audioRes.blob();audioUrl=URL.createObjectURL(audioBlob);$('player').src=audioUrl;$('result').style.display='block';$('status').textContent='Voice ready. Preview it, then download your MP3.';
- }catch(e){$('status').textContent='Could not generate: '+e.message+'. Check that the backend is running and its URL is correct.'}
- finally{$('generate').disabled=false}
-};
-$('download').onclick=()=>{if(!audioBlob)return;const a=document.createElement('a');a.href=audioUrl;a.download='NOVA-voice-'+Date.now()+'.mp3';document.body.appendChild(a);a.click();a.remove()};
-</script></body></html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090d18">
+  <meta name="description" content="NOVA 2.0 — a small, friendly hybrid AI companion.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <title>NOVA 2.0</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-orb">N</div><div><strong>NOVA</strong><span>PERSONAL AI · 2.0</span></div></div>
+      <div class="status"><i></i><span id="mode-label">OFFLINE BRAIN</span></div>
+    </header>
+    <section class="welcome" id="welcome">
+      <div class="hero-orb"><span></span></div>
+      <p class="eyebrow">YOUR LITTLE AI COMPANION</p>
+      <h1>Hi, I'm NOVA.</h1>
+      <p class="subhead">I'm here to listen, understand, and talk with you — one small reply at a time.</p>
+      <div class="suggestions">
+        <button class="suggestion" data-prompt="I'm not feeling good">I'm not feeling good</button>
+        <button class="suggestion" data-prompt="Tell me something interesting">Tell me something interesting</button>
+        <button class="suggestion" data-prompt="Can we talk?">Can we talk?</button>
+      </div>
+    </section>
+    <section class="chat" id="chat" aria-live="polite" aria-label="Conversation"></section>
+    <form class="composer" id="chat-form">
+      <label class="sr-only" for="message">Write a message</label>
+      <textarea id="message" rows="1" maxlength="1200" placeholder="Talk to NOVA..." autocomplete="off"></textarea>
+      <button class="send" type="submit" aria-label="Send message"><span>↑</span></button>
+    </form>
+    <footer class="footer">
+      <span id="connection-note">Private session · Not saved to a server</span>
+      <button id="new-chat" type="button">New chat</button>
+    </footer>
+  </main>
+  <script src="./config.js"></script>
+  <script src="./brain.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
