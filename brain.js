@@ -30,6 +30,7 @@
   const replies = {
     bn: {
       greet:["হ্যাঁ, বলো। শুনছি।","কী খবর? আজ কেমন আছ?"],
+      task:["অবশ্যই চেষ্টা করব। কী কাজ করতে হবে, বলো।","হ্যাঁ, বলো কী কাজ? আগে পুরোটা বুঝে নিই, তারপর সাহায্য করি।"],
       how:["আমি ভালো আছি। তুমি কেমন আছ?","আমি আছি, তোমার কথা শুনছি। তোমার কী খবর?"],
       sad:["কী হয়েছে? চাইলে ধীরে ধীরে আমাকে বলতে পারো।","মন খারাপ কেন? কোনো চাপ নেই, যতটুকু বলতে ইচ্ছে করে বলো।"],
       lonely:["একা লাগছে বুঝি? কী নিয়ে এমন লাগছে, বলবে?","আমি তোমার কথা শুনছি। আজকের দিনটা কেমন গেল?"],
@@ -54,6 +55,7 @@
     },
     "bn-rom": {
       greet:["Haan, bolo. Shunchhi.","Ki khobor? Aj kemon achho?"],
+      task:["Oboshshoi cheshta korbo. Ki kaj korte hobe, bolo.","Haan, bolo ki kaj? Age purota bujhe ni, tarpor shahajjo kori."],
       how:["Ami bhalo achhi. Tumi kemon achho?","Ami achhi, tomar kotha shunchhi. Tomar ki khobor?"],
       sad:["Ki hoyeche? Chaile dhire dhire amake bolte paro.","Mon kharap keno? Kono chap nei, jotota bolte ichchhe kore bolo."],
       lonely:["Eka lagchhe bujhi? Ki niye emon lagchhe, bolbe?","Ami tomar kotha shunchhi. Ajker din kemon gelo?"],
@@ -78,6 +80,7 @@
     },
     hi: {
       greet:["हाँ, बताओ। मैं सुन रही हूँ।","क्या हाल है? आज कैसे हो?"],
+      task:["ज़रूर कोशिश करूँगी। क्या काम करना है, बताओ।","हाँ, बताओ क्या काम है? पहले पूरी बात समझ लूँ, फिर मदद करूँगी।"],
       how:["मैं ठीक हूँ। तुम कैसे हो?","मैं यहीं हूँ, तुम्हारी बात सुन रही हूँ। तुम्हारा क्या हाल है?"],
       sad:["क्या हुआ? चाहो तो आराम से बता सकते हो।","मन उदास क्यों है? जितना बताना चाहो, बताओ।"],
       lonely:["अकेलापन महसूस हो रहा है? क्या बात है, बताओगे?","मैं तुम्हारी बात सुन रही हूँ। आज का दिन कैसा रहा?"],
@@ -102,6 +105,7 @@
     },
     "hi-rom": {
       greet:["Haan, batao. Main sun rahi hoon.","Kya haal hai? Aaj kaise ho?"],
+      task:["Zaroor koshish karungi. Kya kaam karna hai, batao.","Haan, batao kya kaam hai? Pehle poori baat samajh loon, phir madad karungi."],
       how:["Main theek hoon. Tum kaise ho?","Main yahin hoon, tumhari baat sun rahi hoon. Tumhara kya haal hai?"],
       sad:["Kya hua? Chaho to aaram se bata sakte ho.","Mann udaas kyun hai? Jitna batana chaho, batao."],
       lonely:["Akela mehsoos ho raha hai? Kya baat hai, bataoge?","Main tumhari baat sun rahi hoon. Aaj ka din kaisa raha?"],
@@ -145,13 +149,14 @@
     no:["না","একদম না","চাই না","নাহ","नहीं","ना","बिल्कुल नहीं","nahi","nahin","bilkul nahi","chai na","lagbe na"],
     name:["আমার নাম কী","আমার নাম","তোমার নাম কী","मेरा नाम","मुझे क्या बुलाओ","mera naam","mujhe kya bulao","amar nam"],
     doing:["কি করছ","কী করছ","কি করছো","কী করছো","তুমি কী কর","তুমি কি কর","क्या कर रहे","क्या कर रही","तुम क्या कर","what are you doing","ki korcho","ki korchho","tumi ki korcho","tumi ki korchho","ki korchis"],
+    task:["আমার একটা কাজ","একটা কাজ করতে পারবে","একটা কাজ ছিল","একটা কাজ আছে","তুমি কি কাজটা","তুমি কি এটা করতে পারবে","পারবে কি","করতে পারবে","করে দিতে পারবে","কাজটা করে দেবে","একটা হেল্প করবে","একটু সাহায্য করবে","amar ekta kaj","amar ekta kaaj","ekta kaj korte parbe","ekta kaaj korte parbe","ekta kaj chhilo","ekta kaj chilo","ekta kaj ache","tumi ki eta korte parbe","parbe ki","kore dite parbe","kajta kore debe","ekta help korbe","zara ek kaam","ek kaam kar sakti","ek kaam kar sakte","mera ek kaam","ek kaam tha","kya tum ye kar sakti","kya tum ye kar sakte","kar paoge","कर पाओगे","एक काम करोगी","एक काम करोगे","मेरा एक काम","एक काम था","क्या तुम ये कर सकते","क्या तुम ये कर सकती"],
     help:["সাহায্য কর","সাহায্য চাই","হেল্প","मदद करो","मदद चाहिए","सहायता","help me","madad karo","madad chahiye","shahajjo koro","shahajjo chai"],
     where:["তুমি কোথায়","কোথায় থাক","কোথায় আছ","कहाँ हो","कहाँ रहते","कहां हो","where are you","kahan ho","kahan rehte","tumi kothay","kothay acho","kothay thako"],
     explain:["বুঝিয়ে বল","বুঝিয়ে দাও","সহজ করে বল","समझाओ","समझा दो","आसान भाषा","explain","samjhao","samjha do","bujhiye bolo","bujhiye dao","shohoj kore bolo"]
   };
 
   function classify(s) {
-    const order=["identity","creator","capability","how","greet","sad","lonely","tired","angry","happy","thanks","sorry","bye","repeat","doing","help","where","explain","name","yes","no"];
+    const order=["identity","creator","capability","task","how","greet","sad","lonely","tired","angry","happy","thanks","sorry","bye","repeat","doing","help","where","explain","name","yes","no"];
     for (const k of order) if (hasAny(s,patterns[k])) return k;
     return "default";
   }
@@ -162,7 +167,13 @@
   function localReply(input, history=[]) {
     const raw=String(input||"").trim();
     if(!raw) return detectLanguage(raw)==="hi" ? "कुछ लिखो, मैं सुन रही हूँ।" : "কিছু লিখে বলো, আমি শুনছি।";
-    const lang=detectLanguage(raw), s=clean(raw), kind=classify(s);
+    const lang=detectLanguage(raw), s=clean(raw);
+    const recentAssistant = history.filter(x=>x.role==="assistant").slice(-1)[0];
+    const recentUser = history.filter(x=>x.role==="user").slice(-1)[0];
+    const previousReply = recentAssistant ? clean(recentAssistant.content) : "";
+    const previousQuestionWasHow = hasAny(previousReply,["tumi kemon","tomar ki khobor","ami bhalo achhi tumi","তুমি কেমন","তোমার কী খবর","मैं ठीक हूँ तुम","तुम कैसे हो","tum kaise ho"]);
+    const reciprocalWell = hasAny(s,["valo tumi","bhalo tumi","valo achi tumi","bhalo achi tumi","ami valo tumi","ami bhalo tumi","ভালো তুমি","ভালো আছি তুমি","আমি ভালো তুমি","अच्छा तुम","ठीक तुम","अच्छा हूँ तुम","theek tum","achha tum"]);
+    let kind = previousQuestionWasHow && reciprocalWell ? "how" : classify(s);
     const bank=replies[lang]||replies.bn;
     if(kind==="name" && !hasAny(s,["তোমার নাম","तुम्हारा नाम","tomar nam","tomar naam"])) {
       const previous=history.filter(x=>x.role==="user").slice(-2).map(x=>clean(x.content)).join(" ");
