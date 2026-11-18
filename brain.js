@@ -1,117 +1,161 @@
-/* NOVA local NLU v0.2 — lightweight phrase and context matching; not a large language model. */
+/* NOVA Brain v0.5 — Bengali + Hindi only; supports native scripts and Banglish/Hinglish.
+   Lightweight local intent/context engine. Curated phrase patterns, not a trained LLM. */
 (() => {
-  const clean = value => (value || "").toLowerCase()
-    .normalize("NFKC")
-    .replace(/[’']/g, "'")
-    .replace(/[!?.,;:।]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  const has = (s, words) => words.some(word => s.includes(word));
-  const bengaliScript = /[\u0980-\u09FF]/;
-  const devanagari = /[\u0900-\u097F]/;
-  const romanBanglaWords = /\b(ami|amar|amake|tumi|tomar|toke|tor|valo|bhalo|kharap|nei|na|keno|ki|kemon|achi|achhi|bol|bolo|shono|suno|mon|khub|onek|hobe|korbo|kor|kaj|ghum|klanto|dhonnobad|bhalobashi|bhalobasi|bondhu|ajke|kalke)\b/;
-  const romanHindiWords = /\b(main|mera|mujhe|tum|aap|kaise|kyun|kya|nahi|nahin|accha|achha|theek|thik|udaas|thak|dost|shukriya|pyaar|karo|batao|suno)\b/;
-  const banks = {
+  "use strict";
+  const clean = v => String(v || "").toLowerCase().normalize("NFKC")
+    .replace(/[’‘']/g, "").replace(/[!?.,;:।॥…()[\]{}"'`~@#$%^&*_+=<>\\/|-]+/g, " ")
+    .replace(/\s+/g, " ").trim();
+  const hasAny = (s, list) => list.some(x => s.includes(x));
+  const bnScript = /[\u0980-\u09FF]/;
+  const hiScript = /[\u0900-\u097F]/;
+
+  const bnWords = ["ami","amar","amake","amr","tumi","tomar","tomake","toke","tor","apni","apnar","ki","kemon","keno","kothay","kokhon","kivabe","kmn","valo","bhalo","kharap","nei","nai","na","achi","achhi","acchi","bol","bolo","bolbe","shono","suno","mon","khub","onek","hobe","korbo","kor","koro","korchi","kaj","ghum","klanto","dhonnobad","bhalobashi","bhalobasi","bondhu","ajke","kalke","amar","tahole","naki","hoyechhe","hoyeche","lagche","lagchhe","parbo","parbe","chai","chao","dorkar","bujhi","bujhlam"];
+  const hiWords = ["main","mera","meri","mujhe","hum","tum","tumhara","aap","aapka","kaise","kyun","kyu","kya","kahan","kab","kaise","nahi","nahin","accha","achha","theek","thik","udaas","thak","dost","shukriya","pyaar","pyar","karo","karna","batao","suno","mujhko","mera","hai","hoon","hun","raha","rahi","kar","chahiye","kyunki","matlab","haan","han","nahi"];
+
+  function detectLanguage(raw) {
+    const s = clean(raw);
+    if (bnScript.test(raw)) return "bn";
+    if (hiScript.test(raw)) return "hi";
+    let b = 0, h = 0;
+    const tokens = s.split(" ");
+    for (const t of tokens) {
+      if (bnWords.includes(t)) b += 2;
+      if (hiWords.includes(t)) h += 2;
+    }
+    if (/\b(ami|amar|tumi|tomar|kemon|keno|valo|bhalo|kharap|achi|achhi|korchi|bolchi|lagche|lagchhe|nei|nai|ghum|mon|dhonnobad|bhalobashi)\b/.test(s)) b += 3;
+    if (/\b(main|mujhe|mera|tum|aap|kaise|kyun|kyu|kya|nahi|nahin|hai|hoon|hun|raha|rahi|accha|achha|theek|shukriya|pyaar)\b/.test(s)) h += 3;
+    return b >= h ? "bn-rom" : "hi-rom";
+  }
+
+  const replies = {
     bn: {
-      greeting:"হ্যাঁ, বলো। শুনছি।",
-      sad:"কী হয়েছে? চাইলে আমাকে বলতে পারো।",
-      tired:"আজ কি খুব ক্লান্ত লাগছে? একটু বিশ্রাম নেবে?",
-      thanks:"তোমাকে স্বাগতম। ❤️",
-      sorry:"ঠিক আছে। ধীরে ধীরে বলো, আমি শুনছি।",
-      love:"তোমার কথাটা বুঝলাম। ❤️",
-      bye:"আবার কথা হবে। নিজের খেয়াল রেখো।",
-      angry:"বুঝতে পারছি, ব্যাপারটা তোমাকে বিরক্ত করেছে। কী হয়েছে বলবে?",
-      happy:"বাহ, এটা তো ভালো খবর! কী হয়েছে বলো?",
-      default:"হুম, বুঝতে চেষ্টা করছি। আরেকটু বলবে?"
+      greet:["হ্যাঁ, বলো। শুনছি।","কী খবর? আজ কেমন আছ?"],
+      how:["আমি ভালো আছি। তুমি কেমন আছ?","আমি আছি, তোমার কথা শুনছি। তোমার কী খবর?"],
+      sad:["কী হয়েছে? চাইলে ধীরে ধীরে আমাকে বলতে পারো।","মন খারাপ কেন? কোনো চাপ নেই, যতটুকু বলতে ইচ্ছে করে বলো।"],
+      lonely:["একা লাগছে বুঝি? কী নিয়ে এমন লাগছে, বলবে?","আমি তোমার কথা শুনছি। আজকের দিনটা কেমন গেল?"],
+      tired:["অনেক ক্লান্ত লাগছে? একটু বিরতি নিয়ে জল খেয়ে বিশ্রাম নাও।","আজ কি বেশি কাজ হয়েছে? নিজের জন্য একটু সময় রাখো।"],
+      angry:["বুঝতে পারছি তুমি বিরক্ত। কী হয়েছে বলবে?","রাগ হওয়ার পেছনে নিশ্চয়ই কোনো কারণ আছে। ঘটনাটা বলো।"],
+      happy:["বাহ, শুনে ভালো লাগল! কী হয়েছে বলো?","এটা তো দারুণ খবর! আরও বলো।"],
+      thanks:["স্বাগতম। কাজে লাগলে আমারও ভালো লাগল।","কোনো ব্যাপার না। আর কিছু জানতে চাও?"],
+      sorry:["ঠিক আছে, সমস্যা নেই। ধীরে ধীরে বলো।","চিন্তা কোরো না। কী বলতে চাইছিলে?"],
+      bye:["আচ্ছা, পরে কথা হবে। নিজের খেয়াল রেখো।","ঠিক আছে। ভালো থেকো!"],
+      identity:["আমি NOVA। বাংলা ও হিন্দিতে কথা বলার জন্য তৈরি তোমার ছোট্ট AI সহকারী।","আমার নাম NOVA। তুমি বাংলায় বা হিন্দিতে—যেভাবে স্বচ্ছন্দ, সেভাবেই কথা বলো।"],
+      creator:["আমাকে Biswajit Barman তৈরি করছে।","আমার নির্মাতা Biswajit Barman।"],
+      capability:["আমি বাংলা, Banglish, হিন্দি ও Hinglish বুঝে উত্তর দেওয়ার চেষ্টা করি। এখনো শেখার পর্যায়ে আছি।","আমি ছোট ছোট কথোপকথন, সাধারণ প্রশ্ন আর অনুভূতির কথা বুঝতে পারি। কঠিন প্রশ্নে ভুলও হতে পারে।"],
+      repeat:["কোন কথাটা আবার বলব?","কোন অংশটা বুঝতে অসুবিধা হয়েছে?"],
+      yes:["আচ্ছা, বুঝলাম।","ঠিক আছে। তারপর বলো।"],
+      no:["ঠিক আছে, কোনো সমস্যা নেই।","বুঝলাম। অন্যভাবে বলবে?"],
+      name:["তোমাকে কী নামে ডাকব?","তোমার নামটা বলবে?"],
+      default:["হুম, তোমার কথাটা বুঝতে চেষ্টা করছি। আরেকটু খুলে বলবে?","এই বিষয়টা নিয়ে আরেকটু বলো, তাহলে ভালোভাবে উত্তর দিতে পারব।","তুমি ঠিক কী জানতে চাইছ, একটু বুঝিয়ে বলবে?"]
     },
     "bn-rom": {
-      greeting:"Haan, bolo. Shunchhi.",
-      sad:"Ki hoyeche? Chaile amake bolte paro.",
-      tired:"Aj ki khub klanto lagche? Ektu bishram nebe?",
-      thanks:"Tomake shagotom. ❤️",
-      sorry:"Thik ache. Dhire dhire bolo, ami shunchhi.",
-      love:"Tomar kothata bujhlam. ❤️",
-      bye:"Abar kotha hobe. Nijer kheyal rekho.",
-      angry:"Bujhte parchhi, byaparta tomake birakto koreche. Ki hoyeche bolbe?",
-      happy:"Bah, eta to bhalo khobor! Ki hoyeche bolo?",
-      default:"Hmm, bujhte cheshta korchhi. Arektu bolbe?"
+      greet:["Haan, bolo. Shunchhi.","Ki khobor? Aj kemon achho?"],
+      how:["Ami bhalo achhi. Tumi kemon achho?","Ami achhi, tomar kotha shunchhi. Tomar ki khobor?"],
+      sad:["Ki hoyeche? Chaile dhire dhire amake bolte paro.","Mon kharap keno? Kono chap nei, jotota bolte ichchhe kore bolo."],
+      lonely:["Eka lagchhe bujhi? Ki niye emon lagchhe, bolbe?","Ami tomar kotha shunchhi. Ajker din kemon gelo?"],
+      tired:["Onek klanto lagchhe? Ektu birati niye jol kheye bishram nao.","Aj ki beshi kaj hoyeche? Nijer jonno ektu shomoy rekho."],
+      angry:["Bujhte parchhi tumi birakto. Ki hoyeche bolbe?","Rag howar pechhone nishchoy kono karon ache. Ghotonata bolo."],
+      happy:["Bah, shune bhalo laglo! Ki hoyeche bolo?","Eta to darun khobor! Aro bolo."],
+      thanks:["Shagotom. Kaje lagle amar-o bhalo laglo.","Kono byapar na. Ar kichhu jante chao?"],
+      sorry:["Thik ache, shomossha nei. Dhire dhire bolo.","Chinta koro na. Ki bolte chaichhile?"],
+      bye:["Achha, pore kotha hobe. Nijer kheyal rekho.","Thik ache. Bhalo theko!"],
+      identity:["Ami NOVA. Bangla ar Hindi-te kotha bolar jonno toiri tomar chhoto AI assistant.","Amar nam NOVA. Tumi Bangla ba Hindi—je bhabe shosthi, she bhabei kotha bolo."],
+      creator:["Amake Biswajit Barman toiri korchhe.","Amar creator Biswajit Barman."],
+      capability:["Ami Bangla, Banglish, Hindi ar Hinglish bujhe uttor dewar cheshta kori. Ekhono shekhar porjaye achhi.","Ami chhoto kothopokothon, shadharon proshno ar moner kotha bujhte pari. Kothin proshne bhul-o hote pare."],
+      repeat:["Kon kothata abar bolbo?","Kon ongshotta bujhte oshubidha hoyeche?"],
+      yes:["Achha, bujhlam.","Thik ache. Tarpor bolo."],
+      no:["Thik ache, kono shomossha nei.","Bujhlam. Onno bhabe bolbe?"],
+      name:["Tomake ki name dakbo?","Tomar namta bolbe?"],
+      default:["Hmm, tomar kothata bujhte cheshta korchhi. Arektu khule bolbe?","Ei bishoyta niye arektu bolo, tahole bhalo bhabe uttor dite parbo.","Tumi thik ki jante chaichho, ektu bujhiye bolbe?"]
     },
     hi: {
-      greeting:"हाँ, बताओ। मैं सुन रही हूँ।",
-      sad:"क्या हुआ? चाहो तो मुझे बता सकते हो।",
-      tired:"आज थक गए हो क्या? थोड़ा आराम कर लो।",
-      thanks:"कोई बात नहीं। ❤️",
-      sorry:"ठीक है, आराम से बताओ। मैं सुन रही हूँ।",
-      love:"तुम्हारी बात समझ रही हूँ। ❤️",
-      bye:"फिर बात करेंगे। अपना ख्याल रखना।",
-      angry:"लगता है यह बात तुम्हें परेशान कर रही है। क्या हुआ?",
-      happy:"अरे वाह, यह तो अच्छी खबर है! बताओ क्या हुआ?",
-      default:"हम्म, समझने की कोशिश कर रही हूँ। थोड़ा और बताओ?"
+      greet:["हाँ, बताओ। मैं सुन रही हूँ।","क्या हाल है? आज कैसे हो?"],
+      how:["मैं ठीक हूँ। तुम कैसे हो?","मैं यहीं हूँ, तुम्हारी बात सुन रही हूँ। तुम्हारा क्या हाल है?"],
+      sad:["क्या हुआ? चाहो तो आराम से बता सकते हो।","मन उदास क्यों है? जितना बताना चाहो, बताओ।"],
+      lonely:["अकेलापन महसूस हो रहा है? क्या बात है, बताओगे?","मैं तुम्हारी बात सुन रही हूँ। आज का दिन कैसा रहा?"],
+      tired:["थक गए हो क्या? थोड़ा आराम कर लो और पानी पी लो।","आज बहुत काम था क्या? अपने लिए भी थोड़ा समय रखो।"],
+      angry:["समझ सकती हूँ कि तुम परेशान हो। क्या हुआ?","गुस्सा आने की कोई वजह होगी। मुझे बताओ क्या हुआ।"],
+      happy:["अरे वाह! यह सुनकर अच्छा लगा। क्या हुआ?","बहुत अच्छी बात है! और बताओ।"],
+      thanks:["स्वागत है। मदद करके अच्छा लगा।","कोई बात नहीं। कुछ और पूछना है?"],
+      sorry:["ठीक है, कोई बात नहीं। आराम से बताओ।","चिंता मत करो। क्या कहना चाह रहे थे?"],
+      bye:["अच्छा, फिर बात करेंगे। अपना ख्याल रखना।","ठीक है। खुश रहो!"],
+      identity:["मैं NOVA हूँ। हिंदी और बांग्ला में बात करने वाली तुम्हारी छोटी AI सहायक।","मेरा नाम NOVA है। तुम हिंदी या बांग्ला—जिसमें सहज हो, उसी में बात करो।"],
+      creator:["मुझे Biswajit Barman ने बनाया है।","मेरे निर्माता Biswajit Barman हैं।"],
+      capability:["मैं हिंदी, हिंग्लिश, बांग्ला और बांग्लिश समझकर जवाब देने की कोशिश करती हूँ। अभी सीख रही हूँ।","मैं बातचीत और सामान्य सवाल समझ सकती हूँ, लेकिन कठिन सवालों में गलती हो सकती है।"],
+      repeat:["कौन सी बात दोबारा बताऊँ?","किस हिस्से को समझने में परेशानी हुई?"],
+      yes:["अच्छा, समझ गई।","ठीक है। आगे बताओ।"],
+      no:["ठीक है, कोई बात नहीं।","समझ गई। कुछ और कहना चाहोगे?"],
+      name:["तुम्हें किस नाम से बुलाऊँ?","अपना नाम बताओगे?"],
+      default:["हम्म, तुम्हारी बात समझने की कोशिश कर रही हूँ। थोड़ा और बताओ?","इस बारे में थोड़ा और बताओ, ताकि सही जवाब दे सकूँ।","तुम ठीक-ठीक क्या जानना चाहते हो? थोड़ा समझाओ।"]
     },
     "hi-rom": {
-      greeting:"Haan, bolo. Main sun rahi hoon.",
-      sad:"Kya hua? Chaho to mujhe bata sakte ho.",
-      tired:"Aaj thak gaye ho kya? Thoda aaram kar lo.",
-      thanks:"Koi baat nahi. ❤️",
-      sorry:"Theek hai, aaram se batao. Main sun rahi hoon.",
-      love:"Tumhari baat samajh rahi hoon. ❤️",
-      bye:"Phir baat karenge. Apna khayal rakhna.",
-      angry:"Lagta hai ye baat tumhe pareshan kar rahi hai. Kya hua?",
-      happy:"Wah, ye to achhi khabar hai! Batao kya hua?",
-      default:"Hmm, samajhne ki koshish kar rahi hoon. Thoda aur batao?"
-    },
-    en: {
-      greeting:"Hey. I'm listening.",
-      sad:"Oh, what happened? Want to tell me?",
-      tired:"Sounds like a long day. Want to take a little break?",
-      thanks:"You're welcome. I'm glad I could help.",
-      sorry:"It's okay. Take your time — I'm listening.",
-      love:"I hear you. ❤️",
-      bye:"Talk soon. Take care of yourself.",
-      angry:"That sounds frustrating. Want to tell me what happened?",
-      happy:"That's lovely news! What happened?",
-      default:"I hear you. Tell me a little more?"
+      greet:["Haan, batao. Main sun rahi hoon.","Kya haal hai? Aaj kaise ho?"],
+      how:["Main theek hoon. Tum kaise ho?","Main yahin hoon, tumhari baat sun rahi hoon. Tumhara kya haal hai?"],
+      sad:["Kya hua? Chaho to aaram se bata sakte ho.","Mann udaas kyun hai? Jitna batana chaho, batao."],
+      lonely:["Akela mehsoos ho raha hai? Kya baat hai, bataoge?","Main tumhari baat sun rahi hoon. Aaj ka din kaisa raha?"],
+      tired:["Thak gaye ho kya? Thoda aaram kar lo aur paani pi lo.","Aaj bahut kaam tha kya? Apne liye bhi thoda waqt rakho."],
+      angry:["Samajh sakti hoon ki tum pareshan ho. Kya hua?","Gussa aane ki koi wajah hogi. Mujhe batao kya hua."],
+      happy:["Are wah! Ye sunkar achha laga. Kya hua?","Bahut achhi baat hai! Aur batao."],
+      thanks:["Swagat hai. Madad karke achha laga.","Koi baat nahi. Kuch aur poochna hai?"],
+      sorry:["Theek hai, koi baat nahi. Aaram se batao.","Chinta mat karo. Kya kehna chah rahe the?"],
+      bye:["Achha, phir baat karenge. Apna khayal rakhna.","Theek hai. Khush raho!"],
+      identity:["Main NOVA hoon. Hindi aur Bangla mein baat karne wali tumhari chhoti AI sahayak.","Mera naam NOVA hai. Tum Hindi ya Bangla—jis mein aasan lage, usi mein baat karo."],
+      creator:["Mujhe Biswajit Barman ne banaya hai.","Mere creator Biswajit Barman hain."],
+      capability:["Main Hindi, Hinglish, Bangla aur Banglish samajhkar jawab dene ki koshish karti hoon. Abhi seekh rahi hoon.","Main baatcheet aur aam sawaal samajh sakti hoon, lekin mushkil sawaalon mein galti ho sakti hai."],
+      repeat:["Kaunsi baat dobara bataun?","Kis hisse ko samajhne mein dikkat hui?"],
+      yes:["Achha, samajh gayi.","Theek hai. Aage batao."],
+      no:["Theek hai, koi baat nahi.","Samajh gayi. Kuch aur kehna chahoge?"],
+      name:["Tumhe kis naam se bulaun?","Apna naam bataoge?"],
+      default:["Hmm, tumhari baat samajhne ki koshish kar rahi hoon. Thoda aur bataoge?","Is baare mein thoda aur batao, taaki sahi jawab de sakun.","Tum theek-theek kya jaanna chahte ho? Thoda samjhao."]
     }
   };
-  function language(s) {
-    if (bengaliScript.test(s)) return "bn";
-    if (devanagari.test(s)) return "hi";
-    if (romanBanglaWords.test(s)) return "bn-rom";
-    if (romanHindiWords.test(s)) return "hi-rom";
-    return "en";
-  }
-  function intent(s) {
-    if (has(s,["hello","hi","hey","হ্যালো","হাই","নমস্কার","नमस्ते","হ্যালো","ki khobor","kemon acho","kemon achho","kmn acho","kmn acho"])) return "greeting";
-    if (has(s,["ভালো নেই","ভাল নেই","মন খারাপ","কষ্ট","কাঁদ","খারাপ লাগ","sad","upset","not good","feel bad","lonely","দুঃখ","उदास","अच्छा नहीं","valo nei","bhalo nei","mon kharap","kharap lagche","kharap lagchhe","amar valo lagche na","amar bhalo lagche na","mon ta kharap"])) return "sad";
-    if (has(s,["ক্লান্ত","ঘুম","বিশ্রাম","tired","exhausted","sleepy","थक","नींद","klanto","ghum pachhe","ghum pacche","bishram"])) return "tired";
-    if (has(s,["ধন্যবাদ","থ্যাংক","thanks","thank you","शुक्रिया","धन्यवाद","dhonnobad","thankx"])) return "thanks";
-    if (has(s,["sorry","দুঃখিত","মাফ","माफ़","sori"])) return "sorry";
-    if (has(s,["ভালোবাসি","love you","ভালবাসি","प्यार","bhalobashi","valobashi"])) return "love";
-    if (has(s,["বিদায়","যাই","bye","good night","শুভরাত্রি","अलविदा","biday","jacchi","jachi"])) return "bye";
-    if (has(s,["রাগ","বিরক্ত","ক্ষুব্ধ","angry","annoyed","irritated","রাগ হচ্ছে","rag hocche","rag hochhe","birakto"])) return "angry";
-    if (has(s,["খুশি","আনন্দ","দারুণ খবর","happy","excited","great news","khushi","moja hoyeche","darun"])) return "happy";
+
+  const patterns = {
+    greet:["হ্যালো","হ্যালো","নমস্কার","আসসালামু","সুপ্রভাত","শুভ সকাল","হাই","hello","hi","hey","হ্যালো","নমস্তে","नमस्ते","नमस्कार","सुप्रभात","हाय","हेलो","ami esechi","ami achi","ki khobor","kemon acho","kmn acho","kemon achho","ki obostha","haan bolo","suno"],
+    how:["কেমন আছ","কেমন আছো","কী খবর","কি খবর","তুমি কেমন","কেমন চল","कैसे हो","कैसी हो","क्या हाल","तुम कैसे","kaise ho","kaisi ho","kya haal","tum kaise ho","aap kaise ho","tumi kemon acho","tumi kmn acho","tui kemon achis"],
+    sad:["মন খারাপ","ভালো লাগছে না","ভাল লাগছে না","ভালো নেই","ভাল নেই","কষ্ট হচ্ছে","খারাপ লাগছে","মনটা খারাপ","দুঃখ লাগছে","কাঁদতে","একদম ভালো নেই","उदास","मन खराब","अच्छा नहीं लग","दुखी","परेशान हूँ","रोने","mann udaas","man udaas","dil udaas","accha nahi lag","achha nahi lag","bahut bura lag","dukhi hoon","pareshan hoon","mon kharap","mon ta kharap","valo nei","bhalo nei","bhalo lagchhe na","valo lagche na","kharap lagche","kharap lagchhe","amar mon kharap"],
+    lonely:["একা লাগ","একাকী","কেউ নেই","একলা","अकेला","अकेलापन","कोई नहीं","akela lag","akela hoon","tanha","eka lagche","eka lagchhe","keu nei"],
+    tired:["ক্লান্ত","ঘুম পাচ্ছে","ঘুম আসছে","বিশ্রাম","অনেক কাজ","थक गया","थक गई","नींद आ","आराम करना","thak gaya","thak gayi","neend aa","aaram kar","klanto","ghum pachhe","ghum pacche","ghum asche","bishram"],
+    angry:["রাগ হচ্ছে","রেগে আছি","বিরক্ত","মাথা গরম","খুব রাগ","गुस्सा","नाराज़","चिढ़","परेशान कर","gussa","naraz","chidh","bahut gussa","rag hocche","rag hochhe","birakto","matha gorom"],
+    happy:["খুশি","খুব ভালো লাগছে","আজ ভালো","আনন্দ","দারুণ খবর","म खुश","खुश हूँ","बहुत अच्छा","मज़ा आया","khush hoon","bahut achha","maza aaya","khushi","darun","moja hoyeche","aj khub valo lagche","aj bhalo lagche"],
+    thanks:["ধন্যবাদ","অনেক ধন্যবাদ","কৃতজ্ঞ","শুকরিয়া","शुक्रिया","धन्यवाद","बहुत धन्यवाद","shukriya","dhanyavaad","thanks","thank you","dhonnobad","onek dhonnobad"],
+    sorry:["দুঃখিত","সরি","ক্ষমা","মাফ কর","माफ़ करना","माफ करना","सॉरी","मुझे माफ","sorry","maaf kar","maaf karo","sori","dukkhito"],
+    bye:["বিদায়","আবার কথা হবে","যাই","শুভরাত্রি","পরে কথা","अलविदा","फिर मिलेंगे","शुभ रात्रि","चलता हूँ","चलती हूँ","bye","good night","phir milenge","ja raha","ja rahi","biday","pore kotha hobe","jacchi"],
+    identity:["তুমি কে","তোমার নাম","তোমার পরিচয়","তুমি কি NOVA","আপনি কে","तुम कौन","तुम्हारा नाम","आप कौन","तुम्हारा परिचय","who are you","your name","tumi ke","tor nam ki","tomar nam ki","tumar nam ki","tomar naam ki","apni ke"],
+    creator:["কে বানিয়েছে","কে তৈরি করেছে","তোমাকে কে বানিয়েছে","তোমার নির্মাতা","तुम्हें किसने बनाया","किसने बनाया","तुम्हारा निर्माता","who made you","who created you","ke baniyeche","ke toiri koreche","ke banalo","tomake ke baniyeche"],
+    capability:["কি করতে পার","কী করতে পার","তুমি কী জানো","কোন ভাষা","কী কী পার","क्या कर सकती","क्या कर सकते","कौन सी भाषा","क्या जानते","what can you do","which language","ki korte paro","ki ki paro","ki jano","kon bhasha"],
+    repeat:["আবার বল","বুঝিনি","বুঝতে পারিনি","মানে কী","পুনরায় বল","फिर से बताओ","समझ नहीं आया","मतलब क्या","dobara batao","samajh nahi aaya","abar bolo","bujhini","bujhte parini","mane ki"],
+    yes:["হ্যাঁ","ঠিক আছে","আচ্ছা","হুম","জি","हाँ","हां","ठीक है","अच्छा","haan","han","theek hai","thik ache","achha","hmm"],
+    no:["না","একদম না","চাই না","নাহ","नहीं","ना","बिल्कुल नहीं","nahi","nahin","bilkul nahi","chai na","lagbe na"],
+    name:["আমার নাম কী","আমার নাম","তোমার নাম কী","मेरा नाम","मुझे क्या बुलाओ","mera naam","mujhe kya bulao","amar nam"]
+  };
+
+  function classify(s) {
+    const order=["identity","creator","capability","how","greet","sad","lonely","tired","angry","happy","thanks","sorry","bye","repeat","name","yes","no"];
+    for (const k of order) if (hasAny(s,patterns[k])) return k;
     return "default";
   }
-  function localReply(input, history) {
-    const s = clean(input);
-    if (!s) return "একটু লিখে বলো, আমি শুনছি।";
-    const lang = language(input);
-    const bank = banks[lang];
-    const kind = intent(s);
-    if (kind !== "default") return bank[kind];
-    if (has(s,["তুমি কে","তোমার নাম","who are you","your name","तुम कौन","tumi ke","tor nam ki","tomar nam ki","tumar nam ki"])) {
-      return lang.startsWith("bn") ? (lang==="bn"?"আমি NOVA। তোমার ছোট্ট AI সঙ্গী।":"Ami NOVA. Tomar chhoto AI sathi.") : lang.startsWith("hi") ? (lang==="hi"?"मैं NOVA हूँ, तुम्हारी छोटी AI साथी।":"Main NOVA hoon, tumhari chhoti AI saathi.") : "I'm NOVA, your small AI companion.";
-    }
-    if (has(s,["কেন","why","क्यों","keno","kyun"]) && history && history.length) {
-      return lang.startsWith("bn") ? (lang==="bn"?"কোন ব্যাপারটা কেন, একটু বুঝিয়ে বলবে?":"Kon byaparta keno, ektu bujhiye bolbe?") : lang.startsWith("hi") ? (lang==="hi"?"किस बात के बारे में पूछ रहे हो?":"Kis baat ke baare mein pooch rahe ho?") : "Which part do you mean? Tell me a little more.";
-    }
-    if (has(s,["তুমি শুনছ","শুনতে পাচ্ছ","are you listening","can you hear me","shunchho","shunchis","suncho"])) {
-      return lang.startsWith("bn") ? (lang==="bn"?"হ্যাঁ, তোমার মেসেজ পাচ্ছি। বলো।":"Haan, tomar message pachchhi. Bolo.") : "Yes, I'm receiving your messages. Go ahead.";
-    }
-    if (has(s,["কি করছ","কী করছ","what are you doing","ki korcho","ki korchho"])) {
-      return lang.startsWith("bn") ? (lang==="bn"?"তোমার সঙ্গে কথা বলছি। তুমি কী করছ?":"Tomar sathe kotha bolchhi. Tumi ki korchho?") : "I'm here chatting with you. What are you up to?";
-    }
-    return bank.default;
+  function pick(arr, seed) {
+    let n=0; for(let i=0;i<seed.length;i++) n=(n+seed.charCodeAt(i)*(i+1))%arr.length;
+    return arr[n];
   }
-  window.NOVABrain = { localReply, language, intent };
+  function localReply(input, history=[]) {
+    const raw=String(input||"").trim();
+    if(!raw) return detectLanguage(raw)==="hi" ? "कुछ लिखो, मैं सुन रही हूँ।" : "কিছু লিখে বলো, আমি শুনছি।";
+    const lang=detectLanguage(raw), s=clean(raw), kind=classify(s);
+    const bank=replies[lang]||replies.bn;
+    if(kind==="name" && !hasAny(s,["তোমার নাম","तुम्हारा नाम","tomar nam","tomar naam"])) {
+      const previous=history.filter(x=>x.role==="user").slice(-2).map(x=>clean(x.content)).join(" ");
+      if(hasAny(previous,["আমার নাম","मेरा नाम","amar nam","mera naam"])) return lang.startsWith("bn") ? (lang==="bn"?"তোমার নামটা মনে রাখার জন্য এই কথোপকথনে লিখে রাখিনি। তুমি চাইলে আবার বলো।":"Tomar namta ei kothopokothone mone rakhar jonno likhe rakhi ni. Chaile abar bolo.") : (lang==="hi"?"मैंने इस बातचीत में तुम्हारा नाम अलग से सहेजा नहीं है। चाहो तो फिर बता दो।":"Maine is baatcheet mein tumhara naam alag se save nahi kiya. Chaho to phir bata do.");
+    }
+    if(kind==="default" && hasAny(s,["কেন","কেনো","কেন এমন","क्यों","क्यूँ","kyun","kyu","keno"])) {
+      return lang==="bn" ? "কোন বিষয়টার কারণ জানতে চাইছ? একটু নির্দিষ্ট করে বলো।" : lang==="bn-rom" ? "Kon bishoytar karon jante chaichho? Ektu nirdishto kore bolo." : lang==="hi" ? "किस बात का कारण जानना चाहते हो? थोड़ा साफ़ बताओ।" : "Kis baat ka karan jaanna chahte ho? Thoda saaf batao.";
+    }
+    if(kind==="default" && hasAny(s,["কীভাবে","কিভাবে","কী করে","कैसे","kaise","kivabe","kibhabe"])) {
+      return lang==="bn" ? "কোন কাজটা কীভাবে করতে চাও? একটু বিস্তারিত বলো।" : lang==="bn-rom" ? "Kon kajta kivabe korte chao? Ektu bistarito bolo." : lang==="hi" ? "कौन सा काम कैसे करना चाहते हो? थोड़ा विस्तार से बताओ।" : "Kaunsa kaam kaise karna chahte ho? Thoda detail mein batao.";
+    }
+    return pick(bank[kind]||bank.default,s);
+  }
+
+  window.NOVABrain = { localReply, language: detectLanguage, intent: text => classify(clean(text)) };
 })();
