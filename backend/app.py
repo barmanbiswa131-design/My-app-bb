@@ -53,8 +53,6 @@ def health():
 
 @app.post("/chat")
 def chat(req: ChatRequest):
-    if model is None or tokenizer is None:
-        raise HTTPException(status_code=503, detail="NOVA model is still loading")
     raw = req.message.strip()
     lower = raw.lower()
     prefixes = ["/learn ", "nova শেখো:", "nova shikho:", "nova learn:"]
@@ -70,6 +68,8 @@ def chat(req: ChatRequest):
             return {"reply": "এই বিষয়ে সার্চ ফল পাওয়া যায়নি। অন্যভাবে বিষয়টি লিখে চেষ্টা করো।"}
         lines = [f"- {s['title']}: {s['url']}" for s in result["sources"]]
         return {"reply": f"এই বিষয়ে {result['saved']}টি ওয়েব রেফারেন্স Knowledge Store-এ রেখেছি। এটি তথ্য মনে রাখা; Model-এর weights নিজে থেকে বদলায়নি.\n" + "\n".join(lines)}
+    if model is None or tokenizer is None:
+        raise HTTPException(status_code=503, detail="NOVA model is still loading")
     knowledge = recall_knowledge(raw)
     knowledge_block = ""
     if knowledge:
