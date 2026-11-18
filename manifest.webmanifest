@@ -1,0 +1,9 @@
+{
+  "name": "NOVA 2.0",
+  "short_name": "NOVA",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090d18",
+  "theme_color": "#090d18",
+  "description": "A small, friendly hybrid AI companion."
+}
