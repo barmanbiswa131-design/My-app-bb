@@ -46,6 +46,10 @@
       yes:["আচ্ছা, বুঝলাম।","ঠিক আছে। তারপর বলো।"],
       no:["ঠিক আছে, কোনো সমস্যা নেই।","বুঝলাম। অন্যভাবে বলবে?"],
       name:["তোমাকে কী নামে ডাকব?","তোমার নামটা বলবে?"],
+      doing:["আমি এখন তোমার সঙ্গে কথা বলছি। তুমি কী করছ?","তোমার মেসেজের উত্তর দিচ্ছি। তুমি কী নিয়ে ব্যস্ত?"],
+      help:["অবশ্যই, কী বিষয়ে সাহায্য দরকার?","বলো, কোন কাজটায় সাহায্য করব?"],
+      where:["আমি তোমার ফোনের NOVA অ্যাপের মধ্যেই আছি। তুমি কোথায় আছ, সেটা নিজে থেকে জানি না।","আমি অনলাইনে কোনো নির্দিষ্ট জায়গায় থাকি না—এই অ্যাপেই তোমার সঙ্গে কথা বলি।"],
+      explain:["কোন বিষয়টা সহজ করে বুঝিয়ে দেব?","বিষয়টার নাম বলো, আমি ধাপে ধাপে বোঝানোর চেষ্টা করব।"],
       default:["হুম, তোমার কথাটা বুঝতে চেষ্টা করছি। আরেকটু খুলে বলবে?","এই বিষয়টা নিয়ে আরেকটু বলো, তাহলে ভালোভাবে উত্তর দিতে পারব।","তুমি ঠিক কী জানতে চাইছ, একটু বুঝিয়ে বলবে?"]
     },
     "bn-rom": {
@@ -66,6 +70,10 @@
       yes:["Achha, bujhlam.","Thik ache. Tarpor bolo."],
       no:["Thik ache, kono shomossha nei.","Bujhlam. Onno bhabe bolbe?"],
       name:["Tomake ki name dakbo?","Tomar namta bolbe?"],
+      doing:["Ami ekhon tomar sathe kotha bolchhi. Tumi ki korchho?","Tomar message-er uttor dichchhi. Tumi ki niye byasto?"],
+      help:["Oboshshoi, kon bishoye shahajjo dorkar?","Bolo, kon kajtay shahajjo korbo?"],
+      where:["Ami tomar phone-er NOVA app-er moddhei achhi. Tumi kothay achho, seta nijer theke jani na.","Ami ei app-ei tomar sathe kotha boli."],
+      explain:["Kon bishoyta shohoj kore bujhiye debo?","Bishoytar nam bolo, ami dhape dhape bojhanor cheshta korbo."],
       default:["Hmm, tomar kothata bujhte cheshta korchhi. Arektu khule bolbe?","Ei bishoyta niye arektu bolo, tahole bhalo bhabe uttor dite parbo.","Tumi thik ki jante chaichho, ektu bujhiye bolbe?"]
     },
     hi: {
@@ -86,6 +94,10 @@
       yes:["अच्छा, समझ गई।","ठीक है। आगे बताओ।"],
       no:["ठीक है, कोई बात नहीं।","समझ गई। कुछ और कहना चाहोगे?"],
       name:["तुम्हें किस नाम से बुलाऊँ?","अपना नाम बताओगे?"],
+      doing:["मैं अभी तुमसे बात कर रही हूँ। तुम क्या कर रहे हो?","तुम्हारे संदेश का जवाब दे रही हूँ। तुम क्या कर रहे हो?"],
+      help:["ज़रूर, किस बात में मदद चाहिए?","बताओ, किस काम में मदद करूँ?"],
+      where:["मैं तुम्हारे फोन के NOVA ऐप में हूँ। तुम कहाँ हो, यह मुझे अपने आप पता नहीं चलता।","मैं इसी ऐप में तुमसे बात करती हूँ।"],
+      explain:["कौन सा विषय आसान भाषा में समझाऊँ?","विषय का नाम बताओ, मैं धीरे-धीरे समझाने की कोशिश करूँगी।"],
       default:["हम्म, तुम्हारी बात समझने की कोशिश कर रही हूँ। थोड़ा और बताओ?","इस बारे में थोड़ा और बताओ, ताकि सही जवाब दे सकूँ।","तुम ठीक-ठीक क्या जानना चाहते हो? थोड़ा समझाओ।"]
     },
     "hi-rom": {
@@ -106,6 +118,10 @@
       yes:["Achha, samajh gayi.","Theek hai. Aage batao."],
       no:["Theek hai, koi baat nahi.","Samajh gayi. Kuch aur kehna chahoge?"],
       name:["Tumhe kis naam se bulaun?","Apna naam bataoge?"],
+      doing:["Main abhi tumse baat kar rahi hoon. Tum kya kar rahe ho?","Tumhare message ka jawab de rahi hoon. Tum kya kar rahe ho?"],
+      help:["Zaroor, kis baat mein madad chahiye?","Batao, kis kaam mein madad karun?"],
+      where:["Main tumhare phone ke NOVA app mein hoon. Tum kahan ho, ye mujhe apne aap pata nahi chalta.","Main isi app mein tumse baat karti hoon."],
+      explain:["Kaunsa topic aasan bhasha mein samjhaun?","Topic ka naam batao, main dheere-dheere samjhane ki koshish karungi."],
       default:["Hmm, tumhari baat samajhne ki koshish kar rahi hoon. Thoda aur bataoge?","Is baare mein thoda aur batao, taaki sahi jawab de sakun.","Tum theek-theek kya jaanna chahte ho? Thoda samjhao."]
     }
   };
@@ -127,11 +143,15 @@
     repeat:["আবার বল","বুঝিনি","বুঝতে পারিনি","মানে কী","পুনরায় বল","फिर से बताओ","समझ नहीं आया","मतलब क्या","dobara batao","samajh nahi aaya","abar bolo","bujhini","bujhte parini","mane ki"],
     yes:["হ্যাঁ","ঠিক আছে","আচ্ছা","হুম","জি","हाँ","हां","ठीक है","अच्छा","haan","han","theek hai","thik ache","achha","hmm"],
     no:["না","একদম না","চাই না","নাহ","नहीं","ना","बिल्कुल नहीं","nahi","nahin","bilkul nahi","chai na","lagbe na"],
-    name:["আমার নাম কী","আমার নাম","তোমার নাম কী","मेरा नाम","मुझे क्या बुलाओ","mera naam","mujhe kya bulao","amar nam"]
+    name:["আমার নাম কী","আমার নাম","তোমার নাম কী","मेरा नाम","मुझे क्या बुलाओ","mera naam","mujhe kya bulao","amar nam"],
+    doing:["কি করছ","কী করছ","কি করছো","কী করছো","তুমি কী কর","তুমি কি কর","क्या कर रहे","क्या कर रही","तुम क्या कर","what are you doing","ki korcho","ki korchho","tumi ki korcho","tumi ki korchho","ki korchis"],
+    help:["সাহায্য কর","সাহায্য চাই","হেল্প","मदद करो","मदद चाहिए","सहायता","help me","madad karo","madad chahiye","shahajjo koro","shahajjo chai"],
+    where:["তুমি কোথায়","কোথায় থাক","কোথায় আছ","कहाँ हो","कहाँ रहते","कहां हो","where are you","kahan ho","kahan rehte","tumi kothay","kothay acho","kothay thako"],
+    explain:["বুঝিয়ে বল","বুঝিয়ে দাও","সহজ করে বল","समझाओ","समझा दो","आसान भाषा","explain","samjhao","samjha do","bujhiye bolo","bujhiye dao","shohoj kore bolo"]
   };
 
   function classify(s) {
-    const order=["identity","creator","capability","how","greet","sad","lonely","tired","angry","happy","thanks","sorry","bye","repeat","name","yes","no"];
+    const order=["identity","creator","capability","how","greet","sad","lonely","tired","angry","happy","thanks","sorry","bye","repeat","doing","help","where","explain","name","yes","no"];
     for (const k of order) if (hasAny(s,patterns[k])) return k;
     return "default";
   }
